@@ -1,0 +1,36 @@
+import React from 'react'
+
+const GridData = [
+    {column: 1, row: 1, alive: true, clickable: true, id: 1},
+    {column: 1, row: 2, alive: true, clickable: true, id: 2},
+    {column: 1, row: 3, alive: true, clickable: true, id: 3},
+    {column: 1, row: 4, alive: true, clickable: true, id: 4},
+    {column: 1, row: 5, alive: true, clickable: true, id: 5},
+    {column: 1, row: 6, alive: true, clickable: true, id: 6},
+    {column: 1, row: 7, alive: true, clickable: true, id: 7},
+    {column: 1, row: 8, alive: true, clickable: true, id: 8},
+    {column: 1, row: 9, alive: true, clickable: true, id: 9},
+    {column: 1, row: 10, alive: true, clickable: true, id: 10},
+    {column: 1, row: 11, alive: true, clickable: true, id: 11},
+    {column: 1, row: 12, alive: true, clickable: true, id: 12},
+    {column: 1, row: 13, alive: true, clickable: true, id: 13},
+    {column: 1, row: 14, alive: true, clickable: true, id: 14},
+    {column: 2, row: 15, alive: true, clickable: true, id: 15},
+    {column: 2, row: 1, alive: true, clickable: true, id: 1},
+    {column: 2, row: 2, alive: true, clickable: true, id: 2},
+    {column: 2, row: 3, alive: true, clickable: true, id: 3},
+    {column: 2, row: 4, alive: true, clickable: true, id: 4},
+    {column: 2, row: 5, alive: true, clickable: true, id: 5},
+    {column: 2, row: 6, alive: true, clickable: true, id: 6},
+    {column: 2, row: 7, alive: true, clickable: true, id: 7},
+    {column: 2, row: 8, alive: true, clickable: true, id: 8},
+    {column: 2, row: 9, alive: true, clickable: true, id: 9},
+    {column: 2, row: 10, alive: true, clickable: true, id: 10},
+    {column: 2, row: 11, alive: true, clickable: true, id: 11},
+    {column: 2, row: 12, alive: true, clickable: true, id: 12},
+    {column: 2, row: 13, alive: true, clickable: true, id: 13},
+    {column: 2, row: 14, alive: true, clickable: true, id: 14},
+    {column: 2, row: 15, alive: true, clickable: true, id: 15},
+]
+
+export default GridData
