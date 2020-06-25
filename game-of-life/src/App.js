@@ -27,12 +27,15 @@ console.log('grid', grid)
         <div
         key={`${z}-${a}`}
         onClick={() =>{
-          setGrid(produce())
+          const newGrid = produce(grid, gridCopy => {
+            gridCopy[z][a] = 1
+          })
+          setGrid(newGrid)
         }}
         style={{
           width: 20,
           height: 20,
-          backgroundColor: grid[z][a] ? "red" : undefined,
+          backgroundColor: grid[z][a] ? "blue" : undefined,
           border: 'solid 1px navy'
         }}
         />
