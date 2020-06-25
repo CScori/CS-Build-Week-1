@@ -1,25 +1,43 @@
 import React, {useState } from 'react';
+import produce from 'immer'
 
-import './App.scss';
 
-import React from 'react'
-
-const bRows = 50
-const bCols = 50
+const bRows = 25
+const bCols = 25
 
 const App = () => {
 
-
-const [grid, setGrid] = useState(() => {
+const generate = () => {
   const rows = []
   for (let i = 0; i < bRows; i++){
     rows.push(Array.from(Array(bCols), () => 0))
-}})
+     }
+     return rows
+    }
 
-
+const [grid, setGrid] = useState(generate)
+console.log('grid', grid)
   return (
-    <div>
-      
+    <div style={{
+      display:"grid",
+      gridTemplateColumns: `repeat(${bCols},20px)`
+    }}>
+      {grid.map((rows, z) =>
+      rows.map((cols, a) => (
+        <div
+        key={`${z}-${a}`}
+        onClick={() =>{
+          setGrid(produce())
+        }}
+        style={{
+          width: 20,
+          height: 20,
+          backgroundColor: grid[z][a] ? "red" : undefined,
+          border: 'solid 1px navy'
+        }}
+        />
+      ))
+      )}
     </div>
   )
 }
