@@ -1,6 +1,8 @@
 import React, {useState, useCallback, useRef } from 'react';
 import produce from 'immer'
-
+import Headers from './Styles/style'
+import Displays from './Styles/style'
+import Grid from './Styles/style'
 
 const bRows = 25
 const bCols = 25
@@ -46,9 +48,10 @@ const [running, setRunning] = useState(false )
 const runningRef= useRef(running)
 runningRef.current = running
 
-//kill condition
+//simulator
 const runLife = useCallback(
   () => {
+    //kill condition
     if(!runningRef.current){
       return
     }
@@ -83,7 +86,7 @@ const runLife = useCallback(
 
   return (
     <>
-    <Headers>
+    {/* <Headers> */}
       <button onClick={() => {
         setRunning(!running)
         if(!running){
@@ -97,11 +100,11 @@ const runLife = useCallback(
       <button onClick={()=> {
         randomizer()}}>Random</button>
 
-    </Headers>
-    <Displays>
+    {/* </Headers>
+    <Displays> */}
       <div>Generation : {}</div>
-    </Displays>
-    <Grid>
+    {/* </Displays>
+    <Grid> */}
       <div style={{
         display:"grid",
         gridTemplateColumns: `repeat(${bCols},20px)`
@@ -126,7 +129,7 @@ const runLife = useCallback(
         ))
         )}
       </div>
-    </Grid>
+    {/* </Grid> */}
     
     
     </>
