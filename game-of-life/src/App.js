@@ -21,10 +21,10 @@ const App = () => {
   for (let i = 0; i < bRows; i++){
     rows.push(Array.from(Array(bCols), () => 0))
      }
-     return rows
-    }
+   return rows
+ }
 //randomly fills the grid
-    const randomizer = () => {
+  const randomizer = () => {
       const rows = []
   for (let i = 0; i < bRows; i++){
     rows.push(Array.from(Array(bCols), () => Math.random() > .7 ? 1 : 0
@@ -46,47 +46,48 @@ const App = () => {
   ]
 
 //state
-const [grid, setGrid] = useState(generate)
+const [grid, setGrid] = useState(() => {
+  return generate()
+})
 
 //simulator run conditions 
 const runningRef= useRef(running)
 runningRef.current = running
 
 //simulator
-const runLife = useCallback(
-  () => {
+const runLife = useCallback(() => {
     //kill condition
     if(!runningRef.current){
       return
     }
-    setGrid((g) => {
+    setGrid((cg) => {
       //going through grid start
-      return produce(g, gridCopy => {
-        for(let i=0; i<bRows; i++){
-          for(let j=0; i<bCols; j++){
+      return produce(cg, gridCopy => {
+        for(let i=0; i< bRows; i++){
+          for(let j=0; i< bCols; j++){
             let neighbors = 0
             //calculating neighbors 
             operations.forEach(([x,y]) => {
               const newI = i+x
               const newJ = j+y
-              if(newI >= 0 && newI< bRows && newJ >=0 && newJ < bCols){
-                neighbors += g[newI][newJ]
-                // setGeneration(generation+=1)
+              if(newI >= 0 && newI < bRows && newJ >=0 && newJ < bCols){
+                neighbors += cg[newI][newJ]
               }
             })
             //live or die determine
             if (neighbors < 2 || neighbors > 3){
               gridCopy[i][j] = 0
-            } else if(g[i][j] === 0 && neighbors === 3){
+            } else if(cg[i][j] === 0 && neighbors === 3){
               gridCopy[i][j] = 1
+              // setGeneration(generation += 1) line still not
             } 
           }
         }
       })
     })
     
-    setTimeout(runLife, 100)
-  }, [])
+    setTimeout(runLife, speed)
+  }, [bCols, bRows, speed])
 
 
   return (
@@ -106,33 +107,32 @@ const runLife = useCallback(
     {/* </Headers>
     <Displays> */}
       <div>Generation : {generation}</div>
-    {/* </Displays>
-    <Grid> */}
+    {/* </Displays>*/}
       <div style={{
-        display:"grid",
+        display:'grid',
         gridTemplateColumns: `repeat(${bCols},20px)`
       }}>
-        {grid.map((rows, z) =>
-        rows.map((cols, a) => (
+        {grid.map((rows, i) =>
+        rows.map((cols, j) => (
           <div
-          key={`${z}-${a}`}
+          key={`${i}-${j}`}
           onClick={() =>{
             const newGrid = produce(grid, gridCopy => {
-              gridCopy[z][a] = grid[z][a] ? 0 : 1
+              gridCopy[i][j] = grid[i][j] ? 0 : 1
             })
             setGrid(newGrid)
           }}
           style={{
             width: 20,
             height: 20,
-            backgroundColor: grid[z][a] ? `${cellClr}` : undefined,
+            backgroundColor: grid[i][j] ? `${cellClr}` : undefined,
             border: 'solid 1px navy'
           }}
           />
         ))
         )}
       </div>
-    {/* </Grid> 
+    {/*  
     <Adjust>
   
       will have update forms for color, speed and row coll
