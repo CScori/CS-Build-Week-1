@@ -1,5 +1,6 @@
 import React, {useState, useCallback, useRef } from 'react';
 import produce from 'immer'
+import Customs from './Customs'
 import Headers from './Styles/style'
 import Displays from './Styles/style'
 import Grid from './Styles/style'
@@ -137,6 +138,17 @@ const runLife = useCallback(() => {
   
       will have update forms for color, speed and row coll
     </Adjust> */}
+    <Customs
+    setColor={setCellclr}
+    setSpeed={setSpeed}
+    setRow={setbRows}
+    setCol={setbCols}
+    color={cellClr}
+    speed={speed}
+    rows={bRows}
+    col={bCols}
+
+    />
     </>
   )
 }
