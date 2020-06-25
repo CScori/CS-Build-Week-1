@@ -14,4 +14,9 @@ const Headers = styled.div`
 
 
 `
-export default {Headers, Grid, Displays}
+const Adjust = styled.div`
+
+
+
+`
+export default {Headers, Grid, Displays, Adjust}

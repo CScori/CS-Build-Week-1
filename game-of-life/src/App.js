@@ -4,12 +4,35 @@ import Headers from './Styles/style'
 import Displays from './Styles/style'
 import Grid from './Styles/style'
 
-const bRows = 25
-const bCols = 25
+
 
 const App = () => {
-  const bRows = 25
-  const bCols = 25
+  const [bRows, setbRows] = useState(25)
+  const [bCols, setbCols] = useState(25)
+  const [cellClr, setCellclr] = useState('blue')
+  const [speed, setSpeed] = useState(100)
+  const [running, setRunning] = useState(false )
+  const [generation, setGeneration]= useState(0)
+  
+
+//grid span
+  const generate = () => {
+  const rows = []
+  for (let i = 0; i < bRows; i++){
+    rows.push(Array.from(Array(bCols), () => 0))
+     }
+     return rows
+    }
+//randomly fills the grid
+    const randomizer = () => {
+      const rows = []
+  for (let i = 0; i < bRows; i++){
+    rows.push(Array.from(Array(bCols), () => Math.random() > .7 ? 1 : 0
+    ))
+     }
+     setGrid(rows)
+    }
+  
   // neigbor checks
   const operations = [
     [0,1],
@@ -21,30 +44,11 @@ const App = () => {
     [1,0],
     [-1,0]
   ]
-//might change to usestate later
-//grid span
-  const generate = () => {
-  const rows = []
-  for (let i = 0; i < bRows; i++){
-    rows.push(Array.from(Array(bCols), () => 0))
-     }
-     return rows
-    }
 
-    const randomizer = () => {
-      const rows = []
-  for (let i = 0; i < bRows; i++){
-    rows.push(Array.from(Array(bCols), () => Math.random() > .7 ? 1 : 0
-    ))
-     }
-     setGrid(rows)
-    }
-  
-
+//state
 const [grid, setGrid] = useState(generate)
-const [running, setRunning] = useState(false )
 
-
+//simulator run conditions 
 const runningRef= useRef(running)
 runningRef.current = running
 
@@ -67,6 +71,7 @@ const runLife = useCallback(
               const newJ = j+y
               if(newI >= 0 && newI< bRows && newJ >=0 && newJ < bCols){
                 neighbors += g[newI][newJ]
+                // setGeneration(generation+=1)
               }
             })
             //live or die determine
@@ -92,17 +97,15 @@ const runLife = useCallback(
         if(!running){
           runningRef.current = true
           runLife()
-        }}}>Start</button>
+        }}}>{running ? 'Stop' : 'Start'}</button>
 
-      <button onClick={()=> {
-        setGrid(generate())}}>Clear</button>
+      <button onClick={()=> {setGrid(generate())}}>Clear</button>
 
-      <button onClick={()=> {
-        randomizer()}}>Random</button>
+      <button onClick={()=> {randomizer()}}>Random</button>
 
     {/* </Headers>
     <Displays> */}
-      <div>Generation : {}</div>
+      <div>Generation : {generation}</div>
     {/* </Displays>
     <Grid> */}
       <div style={{
@@ -122,16 +125,18 @@ const runLife = useCallback(
           style={{
             width: 20,
             height: 20,
-            backgroundColor: grid[z][a] ? "blue" : undefined,
+            backgroundColor: grid[z][a] ? `${cellClr}` : undefined,
             border: 'solid 1px navy'
           }}
           />
         ))
         )}
       </div>
-    {/* </Grid> */}
-    
-    
+    {/* </Grid> 
+    <Adjust>
+  
+      will have update forms for color, speed and row coll
+    </Adjust> */}
     </>
   )
 }
