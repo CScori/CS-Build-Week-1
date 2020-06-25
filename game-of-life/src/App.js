@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState } from 'react';
 
-function App() {
+import './App.scss';
+
+import React from 'react'
+
+const bRows = 50
+const bCols = 50
+
+const App = () => {
+
+
+const [grid, setGrid] = useState(() => {
+  const rows = []
+  for (let i = 0; i < bRows; i++){
+    rows.push(Array.from(Array(bCols), () => 0))
+}})
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
+
+
+  
