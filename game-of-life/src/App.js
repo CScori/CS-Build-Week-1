@@ -1,6 +1,8 @@
 import React, {useState, useCallback, useRef } from 'react';
 import produce from 'immer'
+import {Switch, Route, NavLink} from 'react-router-dom'
 import Customs from './Customs'
+import Rules from './Rules'
 import Headers from './Styles/style'
 import Displays from './Styles/style'
 import Grid from './Styles/style'
@@ -93,6 +95,7 @@ const runLife = useCallback(() => {
 
   return (
     <>
+    
     {/* <Headers> */}
       <button onClick={() => {
         setRunning(!running)
@@ -107,7 +110,10 @@ const runLife = useCallback(() => {
 
     {/* </Headers>
     <Displays> */}
-      <div>Generation : {generation}</div>
+      <div>
+        Generation : {generation} 
+        
+      </div>
     {/* </Displays>*/}
       <div style={{
         display:'grid',
@@ -149,6 +155,7 @@ const runLife = useCallback(() => {
     col={bCols}
 
     />
+    <Rules/>
     </>
   )
 }
