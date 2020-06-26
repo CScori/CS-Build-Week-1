@@ -79,19 +79,24 @@ const runLife = useCallback(() => {
               }
             })
             //live or die determine
-            if (neighbors < 2 || neighbors > 3){
+            if(gridCopy[i][j] === 1){
+              
+            }
+            else if (neighbors < 2 || neighbors > 3){
               gridCopy[i][j] = 0
             } else if(cg[i][j] === 0 && neighbors === 3){
               gridCopy[i][j] = 1
-              // setGeneration(generation += 1) line still not
+              
             } 
           }
         }
+        setGeneration(generation += 1)
       })
     })
     
-    setTimeout(runLife, speed)
+    setTimeout(runLife, 100)
   }, [bCols, bRows, speed])
+
 
 
   return (
