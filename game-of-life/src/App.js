@@ -6,6 +6,7 @@ import Rules from './Rules'
 import Headers from './Styles/style'
 import Displays from './Styles/style'
 import Grid from './Styles/style'
+import './App.css'
 
 
 
