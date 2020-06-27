@@ -1,172 +1,238 @@
-import React, {useState, useCallback, useRef } from 'react';
-import produce from 'immer'
-import {Switch, Route, NavLink} from 'react-router-dom'
-import Customs from './Customs'
-import Rules from './Rules'
-import Headers from './Styles/style'
-import Displays from './Styles/style'
-import Grid from './Styles/style'
-import './App.css'
-
-
-
-const App = () => {
-  const [bRows, setbRows] = useState(25)
-  const [bCols, setbCols] = useState(25)
-  const [cellClr, setCellclr] = useState('blue')
-  const [speed, setSpeed] = useState(100)
-  const [running, setRunning] = useState(false )
-  const [generation, setGeneration]= useState(0)
-  
-
-//grid span
-  const generate = () => {
-  const rows = []
-  for (let i = 0; i < bRows; i++){
-    rows.push(Array.from(Array(bCols), () => 0))
-     }
-   return rows
- }
-//randomly fills the grid
-  const randomizer = () => {
-      const rows = []
-  for (let i = 0; i < bRows; i++){
-    rows.push(Array.from(Array(bCols), () => Math.random() > .7 ? 1 : 0
-    ))
-     }
-     setGrid(rows)
-    }
-  
-  // neigbor checks
-  const operations = [
-    [0,1],
-    [0,-1],
-    [1,-1],
-    [-1,1],
-    [1,1],
-    [-1,-1],
-    [1,0],
-    [-1,0]
-  ]
-
-//state
-const [grid, setGrid] = useState(() => {
-  return generate()
-})
-
-//simulator run conditions 
-const runningRef= useRef(running)
-runningRef.current = running
-
-//simulator
-const runLife = useCallback(() => {
-    //kill condition
-    if(!runningRef.current){
-      return
-    }
-    setGrid((cg) => {
-      //going through grid start
-      return produce(cg, gridCopy => {
-        for(let i=0; i< bRows; i++){
-          for(let j=0; i< bCols; j++){
-            let neighbors = 0
-            //calculating neighbors 
-            operations.forEach(([x,y]) => {
-              const newI = i+x
-              const newJ = j+y
-              if(newI >= 0 && newI < bRows && newJ >=0 && newJ < bCols){
-                neighbors += cg[newI][newJ]
-              }
-            })
-            //live or die determine
-            if(gridCopy[i][j] === 1){
-              
-            }
-            else if (neighbors < 2 || neighbors > 3){
-              gridCopy[i][j] = 0
-            } else if(cg[i][j] === 0 && neighbors === 3){
-              gridCopy[i][j] = 1
-              
-            } 
-          }
+import React, { Component } from 'react'
+import Rules from './cmps/Rules'
+import Universe from './cmps/Universe'
+import './App.scss';
+export default class App extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+          universe: new Universe(),
+          size: [25,25],
+          running: false,
+          speed: 100,
+          random: false,
+          color: "blue"
         }
-        setGeneration(generation += 1)
-      })
-    })
     
-    setTimeout(runLife, 100)
-  }, [bCols, bRows, speed])
-
-
-
-  return (
-    <>
-    
-    {/* <Headers> */}
-      <button onClick={() => {
-        setRunning(!running)
-        if(!running){
-          runningRef.current = true
-          runLife()
-        }}}>{running ? 'Stop' : 'Start'}</button>
-
-      <button onClick={()=> {setGrid(generate())}}>Clear</button>
-
-      <button onClick={()=> {randomizer()}}>Random</button>
-
-    {/* </Headers>
-    <Displays> */}
-      <div>
-        Generation : {generation} 
+        this.handleColumn = this.handleColumn.bind(this);
+        this.handleRow = this.handleRow.bind(this);
+        this.renderBoard = this.renderBoard.bind(this);
+        this.initialize = this.initialize.bind(this);
+        this.changeRun = this.changeRun.bind(this);
+        this.stopBoard = this.stopBoard.bind(this);
+        this.resetBoard = this.resetBoard.bind(this);
+        this.randomize = this.randomize.bind(this);
+        this.storeCell = this.storeCell.bind(this);
+        this.changeCell = this.changeCell.bind(this);
         
-      </div>
-    {/* </Displays>*/}
-      <div style={{
-        display:'grid',
-        gridTemplateColumns: `repeat(${bCols},20px)`
-      }}>
-        {grid.map((rows, i) =>
-        rows.map((cols, j) => (
-          <div
-          key={`${i}-${j}`}
-          onClick={() =>{
-            const newGrid = produce(grid, gridCopy => {
-              gridCopy[i][j] = grid[i][j] ? 0 : 1
-            })
-            setGrid(newGrid)
-          }}
-          style={{
-            width: 20,
-            height: 20,
-            backgroundColor: grid[i][j] ? `${cellClr}` : undefined,
-            border: 'solid 1px navy'
-          }}
-          />
-        ))
-        )}
-      </div>
-    {/*  
-    <Adjust>
-  
-      will have update forms for color, speed and row coll
-    </Adjust> */}
-    <Customs
-    setColor={setCellclr}
-    setSpeed={setSpeed}
-    setRow={setbRows}
-    setCol={setbCols}
-    color={cellClr}
-    speed={speed}
-    rows={bRows}
-    col={bCols}
+      }
+      //allows the run of generation
+      runGame() {
+        this.setState({
+          universe: this.state.universe.addGeneration()
+        })
+      }
+  //creates row option and handler  
+      handleRow(e) {
+        if(!this.state.running){
+          let actualSize = this.state.size;
+    
+          if(e.target.value < 90){
+            actualSize[1] = e.target.value;
+          } else {
+            actualSize[1] = 25;
+          }
+            
+          this.setState({
+            size: actualSize
+          });
+    
+          this.renderBoard();
+        }
+      }
+//creates col option and handler    
+      handleColumn(e) {
+        if(!this.state.running){
+          let actualSize = this.state.size;
+    
+          if(e.target.value < 90){
+            actualSize[0] = e.target.value;
+          } else {
+            actualSize[0] = 25;
+          }
+            
+          this.setState({
+            size: actualSize
+          });
+    
+          this.renderBoard();
+        }
+      }
+//  handles the speed adjustment 
+      initialize() {
+        if(!this.state.running){
+          this.setState({
+            running: true,
+          }, () => {
+            this.intervalRef = setInterval(()=> this.runGame(), this.state.speed);
+          })
+        }
+      }
+    //start stop
+      changeRun(e){
+        this.setState({
+            speed: e.target.value
+          })
+        if(this.state.running){
+          this.stopBoard()
+          setTimeout(()=> {this.initialize()}, 100)
+        }
+      }
+    //stop button
+      stopBoard(){
+        this.setState({
+          running: false
+        }, () => {
+          if(this.intervalRef){
+            clearInterval(this.intervalRef)
+          }
+        })
+      }
+    //clears live cells
+      resetBoard(){
+        this.setState({
+          running: false,
+          universe: new Universe()
+        }, () => {
+          if(this.intervalRef){
+            clearInterval(this.intervalRef)
+          }
+        })
+      }
+    //updates cell options
+      storeCell(position){
+        if(!this.state.running){
+          this.setState({
+            universe: this.state.universe.storeCell(position)
+          })
+        }
+      }
+    
+      changeCell(e){
+        this.setState({
+            color: e.target.value
+          })
+        
+      }
+    //board creator
+      renderBoard() {
+        let newWorld = [];
+        let cellRow = [];
+    
+        if (this.state.random === false){
+          for(let i = 0; i < this.state.size[0]; i++) {
+            for (let j = 0; j < this.state.size[1]; j++){
+              if(this.state.universe.isAlive(i + " , " + j)){
+                cellRow.push(
+                  <Cell backgroundColor={`${this.state.color}`} key={[i, j]} position={{x: i, y: j}} live={true} storeCell={this.storeCell.bind(this)}/>
+                );
+              } else {
+                cellRow.push(
+                  <Cell backgroundColor='white' key={[i, j]} position={{x: i, y: j}} live={false} storeCell={this.storeCell.bind(this)}/>
+                );
+              }
+            }
+            newWorld.push(<div className="row" key={i}>{cellRow}</div>);
+            cellRow = [];
+          }
+          return newWorld;
+        } else {
+          return this.randomBoard()
+        }
+        
+      }
+    
+    //allows random generator
+      randomBoard() {
+        let newWorld = [];
+        let cellRow = [];
+        for(let i = 0; i < this.state.size[0]; i++) {
+          for (let j = 0; j < this.state.size[1]; j++){
+            let randomNum = Math.random()
+            if(randomNum > .7){
+              cellRow.push(
+                <Cell key={[i, j]} position={{x: i, y: j}} live={true} storeCell={this.storeCell.bind(this)}/>
+              );
+            } else {
+              cellRow.push(
+                <Cell key={[i, j]} position={{x: i, y: j}} live={false} storeCell={this.storeCell.bind(this)}/>
+              );
+            }
+          }
+          newWorld.push(<div className="row" key={i}>{cellRow}</div>);
+          cellRow = [];
+        }
+    
+        return newWorld;
+      }
+    // selects random live cells
+      randomize() {
+        if (!this.state.random){
+          this.setState({
+            random: true
+          })
+    
+        }
+      }
+    
+    render() {
+        return (
+            <>
+                <div className='buttons'>
+                    <button onClick={this.initialize}>Start</button>
+                    <button onClick={this.stopBoard}>Stop</button>
+                    <button onClick={this.resetBoard}>Reset</button>
+                    <button onClick={this.randomize}>Randomize</button>
+                </div>
+                <p className='generation'>Generation : {this.state.universe.getGeneration()}</p>
+                <div className='board'>
+                     {this.renderBoard()}
+                </div>
+                <div className='adjustments'>
+                 <label>
+                    Rows: 
+                    <input className="input" type="text" value={this.state.size[1]} onChange={this.handleRow} />
+              </label>
 
-    />
-    <Rules/>
-    </>
-  )
+              <label>
+                    Columns:
+                    <input className="input" type="text" value={this.state.size[0]} onChange={this.handleColumn} />
+              </label>
+
+              <label>
+                    Change speed:
+                    <input className="input" type="text" value={this.state.speed} onChange={(e) => {this.changeRun(e)}} />
+              </label>
+
+              <label>
+                     Change color:
+                     <input className="input" type="text" value={this.state.color} onChange={(e) => {this.changeCell(e)}} />
+              </label>
+                </div>
+
+                <Rules/>
+            </>
+        )
+    }
 }
-
-export default App
-
-
-  
+//toggles cell state from death to life
+class Cell extends App {
+    render(props) {
+      return (
+        <>
+        
+        <div  onClick={() => this.props.storeCell(this.props.position)} className={this.props.live ? "cellContainerLive" : "cellContainerDead"} ></div>
+        </>
+      );
+    }
+  }
